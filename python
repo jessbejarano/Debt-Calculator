@@ -1,0 +1,142 @@
+import copy
+from flask import Flask, jsonify, render_template, request
+
+app = Flask(__name__)
+
+js_code = """
+document.addEventListener("DOMContentLoaded", function() {
+    const addCardBtn = document.getElementById("add-card-btn");
+    const form = document.getElementById("card-form");
+    const calculateBtn = document.getElementById("calculate-btn");
+    const resultsDiv = document.getElementById("results");
+    const totalDiv = document.getElementById("total-container");
+    let cardCount = 1;
+
+
+    //Add Card Function
+    addCardBtn.addEventListener("click", function() {
+        cardCount++;
+
+        const newCardDiv = document.createElement("div");
+        newCardDiv.classList.add("card-input");
+
+        newCardDiv.innerHTML = `
+            <br><br>
+            <label for="name${cardCount}">Card Name:</label>
+            <input type="text" name="name[]" placeholder="Enter name" required>
+            <br><br>
+            <label for="balance${cardCount}">Balance:</label>
+            <input type="number" name="balance[]" placeholder="$" required>
+            <br><br>
+            <label for="payment${cardCount}">Payment:</label>
+            <input type="number" name="payment[]" placeholder="$" required>
+            <br><br>
+            <label for="interest${cardCount}">APR:</label>
+            <input type="number" name="interest[]" placeholder="%" required>
+            <br>
+        `;
+
+        document.getElementById("card-container").appendChild(newCardDiv);
+    });
+
+
+
+    //Calculation Function
+    calculateBtn.addEventListener("click", function() {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const cardsData = [];
+
+        for (let i = 0; i < cardCount; i++) {
+            const cardData = {
+                name: formData.getAll('name[]')[i],
+                balance: parseFloat(formData.getAll('balance[]')[i]),
+                payment: parseFloat(formData.getAll('payment[]')[i]),
+                interest: parseFloat(formData.getAll('interest[]')[i]) / 100 / 12
+            };
+            cardsData.push(cardData);
+        }
+
+        const results = calculateSnowballMethod(cardsData);
+        displayResults(results);
+    });
+
+    function calculateSnowballMethod(cards) {
+        let totalMonths = 0;
+        let snowballAmount = cards[0].payment;
+        const results = [];
+        let totalAccumInterest = 0;
+
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            const name = card.name;
+            let balance = card.balance;
+            let payment = snowballAmount;
+            const interest = card.interest;
+
+            // Check if the name is valid
+            if (!name) {
+                continue; // Skip this card if name is invalid
+            }
+
+            if(i == 0) {
+                results.push(`<strong class="bold-large">Start with card: ${name}</strong>`);
+            } 
+            else {
+                results.push(`<strong class="bold-large">Next Card: ${name} with Payment of: $${payment}</strong>`);
+            } 
+
+            while (balance > 0) {
+                totalMonths++;
+                results.push(`Month ${totalMonths} Balance for ${name}: $${balance.toFixed(2)}`);
+
+                const accumInterest = balance * interest;
+                totalAccumInterest += accumInterest;
+                balance += accumInterest;
+                balance -= snowballAmount;
+
+                if (balance < 0) {
+                    balance = 0;
+                }
+
+                for (let j = 0; j < cards.length; j++) {
+                    if (j !== i) {
+                        const otherAccumInterest = cards[j].balance * cards[j].interest;
+                        cards[j].balance += otherAccumInterest;
+                        totalAccumInterest += otherAccumInterest;
+                        cards[j].balance -= cards[j].payment;
+
+                        if (cards[j].balance < 0) {
+                            cards[j].balance = 0;
+                        }
+                    }
+                }
+            }
+            //When the balance is 0, next payment is updated
+            if (i < cards.length - 1) {
+                snowballAmount += cards[i + 1].payment;
+            }
+        }
+
+        results.push(`You will be debt-free in ${Math.floor(totalMonths / 12)} years and ${totalMonths % 12} months`);
+        results.push('You will have paid a total of $' + totalAccumInterest.toFixed(2) + ' in interest')
+        return results;
+    }
+
+    function displayResults(results) {
+        resultsDiv.innerHTML = results.slice(0, -2).map(item => `<p>${item}</p>`).join('');
+        totalDiv.innerHTML = `<h4>${results[results.length - 2]}</h4>`;
+        totalDiv.innerHTML += `<h4>${results[results.length - 1]}</h4>`;
+    }
+});
+
+"""
+
+@app.route('/')
+def home():
+    return render_template('index.html', js_code=js_code)
+
+
+if __name__ == '__main__':
+  app.run(host='0.0.0.0', port=5000, debug=True)

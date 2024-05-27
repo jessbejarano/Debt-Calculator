@@ -1,0 +1,93 @@
+body {
+    font-family: Trebuchet MS;
+    background: linear-gradient(to bottom, 
+      #ededed 0%,
+      #ededed 70%,
+      #3d8691 100%,
+      #3d8691 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  
+  #image {
+    width: 50px; /* Set the width */
+    height: auto; /* Maintain aspect ratio */
+  }
+  .title-container {
+    text-align: center;
+    color: #363636;
+    margin: 15px;
+    /* text-shadow: 
+    -1px -1px 0 #a300c7,
+     1px -1px 0 #a300c7,
+    -1px  1px 0 #a300c7,
+     1px  1px 0 #a300c7; */
+  }
+  
+  .info-container {
+    text-align: center;
+    color: #595959;
+    align-items: center;
+    margin: 30px;
+    padding-left: 200px;
+    padding-right: 200px;
+    /* border: 2px solid #5b3ab0; */
+  }
+  
+  .flex-container {
+    display: flex;
+    /* border: 2px solid red;  */
+  }
+  
+  .user-container {
+    flex: 1;
+    margin: 20px;
+    text-align: center;
+    color: #363636;
+    /* border: 2px solid #5b3ab0; */
+    padding: 10px;
+  }
+  
+  .results-container {
+    flex: 1;
+    margin: 20px;
+    /* text-align: center; */
+    color: #363636;
+    /* border: 2px solid #5b3ab0; */
+    padding: 10px;
+  }
+  
+  .total-container {
+    width: 50%; /* Adjust the width as needed */
+    margin: 20px auto; /* Set margin to auto to center horizontally */
+    text-align: center;
+    align-items: center;
+    padding: 20px;
+    color: black;
+    /* border: 2px solid #5b3ab0; */
+  }
+  
+  .bold-large {
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  
+  .disclaimer-container {
+    align-items: center;
+    /* border: 2px solid #5b3ab0; */
+    margin: 30px;
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+  #disclaimer-text {
+    font-size: 0.7em;
+    text-align: center;
+    align-items: center;
+    /* border: 2px solid blue; */
+  }
+  
+  #name-text {
+    font-size: 0.8em;
+    text-align: center;
+    /* border: 2px solid red; */
+  }
