@@ -10,8 +10,9 @@ bootstrap = Bootstrap(app)
 js_code = """
 document.addEventListener("DOMContentLoaded", function() {
     const addCardBtn = document.getElementById("add-card-btn");
-    const form = document.getElementById("card-form");
+    const clearBtn = document.getElementById("clear-btn");
     const calculateBtn = document.getElementById("calculate-btn");
+    const form = document.getElementById("card-form");
     const resultsDiv = document.getElementById("results");
     const totalDiv = document.getElementById("total-container");
     let cardCount = 1;
@@ -133,6 +134,10 @@ document.addEventListener("DOMContentLoaded", function() {
         totalDiv.innerHTML = `<h4>${results[results.length - 2]}</h4>`;
         totalDiv.innerHTML += `<h4>${results[results.length - 1]}</h4>`;
     }
+
+    clearBtn.addEventListener('click', function() {
+        form.reset();
+    });
 });
 
 """
